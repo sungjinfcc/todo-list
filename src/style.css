@@ -6,3 +6,96 @@
   margin: 0;
   font-family: inherit;
 }
+body {
+}
+header {
+  background-color: #df5474;
+  height: 10vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #dff9fb;
+  font-size: 1.8rem;
+}
+main {
+  display: flex;
+  height: 85vh;
+}
+.nav {
+  flex: 1;
+  background-color: #ededf1;
+}
+.title-div {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  justify-content: space-around;
+  padding: 2rem 3rem;
+}
+.add {
+  border: none;
+  border-radius: 10%;
+  font-size: 2rem;
+  padding: 0.2rem 1rem;
+  color: black;
+  background-color: transparent;
+}
+.add:hover {
+  color: white;
+}
+.projects-div,
+.items-div {
+  display: flex;
+  flex-direction: column;
+  padding: 0 3rem;
+  align-items: start;
+  font-size: 1.2rem;
+}
+.content {
+  flex: 5;
+}
+.modal {
+  transform: translate(-50%, -50%) scale(0);
+  transition: 0.2s ease-in-out;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 30vw;
+}
+.modal.active {
+  transform: translate(-50%, -50%) scale(1);
+  z-index: 1;
+  background-color: #ededf1;
+  border: none;
+  border-radius: 10px;
+}
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  background-color: rgba(0, 0, 0, 0.2);
+  display: none;
+}
+.overlay.active {
+  display: block;
+}
+footer {
+  height: 5vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+  background-color: #c3c7cb;
+}
+.fa-github {
+  font-size: 1.5rem;
+  margin-left: 0.5rem;
+  transition: transform 0.3s ease-in-out;
+}
+
+.fa-github:hover {
+  transform: rotate(360deg) scale(1.2);
+}
