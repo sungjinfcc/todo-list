@@ -35,11 +35,11 @@ main {
   font-size: 2rem;
   color: black;
   background-color: transparent;
-  transition: transform 0.3s ease-in-out;
+  transition: transform 0.1s ease-in-out;
 }
 .delete {
   color: red;
-  transition: transform 0.3s ease-in-out;
+  transition: transform 0.1s ease-in-out;
 }
 .add:hover,
 .delete:hover,

@@ -73,6 +73,10 @@ export default class UI {
   static addItemButtonHandler() {
     const items = document.querySelectorAll(".item");
     items.forEach((item) => item.addEventListener("click", UI.editItem));
+    const deleteButtons = document.querySelectorAll("#delete-item");
+    deleteButtons.forEach((button) =>
+      button.addEventListener("click", UI.removeItem)
+    );
   }
 
   static editItem(e) {
@@ -167,5 +171,17 @@ export default class UI {
     }
     Storage.removeProject(title);
     UI.loadProjects();
+  }
+
+  static removeItem(e) {
+    const itemTitle = e.target.parentNode.children[0].id;
+    const projectTitleDiv = document.querySelector("#project-title");
+    const projectTitle = projectTitleDiv.textContent;
+    console.log(projectTitle, itemTitle);
+    const todoList = Storage.getTodoList();
+    todoList.getProject(projectTitle).removeItem(itemTitle);
+    Storage.saveTodoList(todoList);
+    UI.loadProjects();
+    UI.loadItems(projectTitle);
   }
 }

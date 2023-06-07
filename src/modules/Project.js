@@ -34,6 +34,6 @@ export default class Project {
   }
 
   removeItem(itemTitle) {
-    this.items.filter((value) => value.title !== itemTitle);
+    this.items = this.items.filter((value) => value.title !== itemTitle);
   }
 }

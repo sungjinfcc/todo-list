@@ -8,13 +8,11 @@ export default class TodoList {
   }
 
   getProjects() {
-    console.log("getprojects called", this.projects);
     return this.projects;
   }
 
   getProject(title) {
     const project = this.projects.find((value) => value.title === title);
-    console.log("getProject called", project);
     return project;
   }
 
