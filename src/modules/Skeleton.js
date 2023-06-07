@@ -37,11 +37,10 @@ export default class Skeleton {
         </div>
         <div class="modal" id="item-modal">
           <form id="addItem">
-            <h2>Add new item!</h3>
+            <h2>Add new item!</h2>
             <input type="text" id="item-input-title" placeholder="Title" />
             <input type="text" id="item-input-description" placeholder="Description" />
             <input type="date" id="item-input-due-date" />
-            <input type="number" id="item-input-priority" />
             <button class="submit" id="item-submit" type="submit">Submit</button>
           </form>
         </div>

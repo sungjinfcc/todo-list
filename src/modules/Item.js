@@ -1,10 +1,8 @@
 export default class Item {
-  constructor(title) {
+  constructor(title, description, dueDate) {
     this.title = title;
-    this.description = "description";
-    this.dueDate = "dueDate";
-    this.priority = "priority";
-    this.isDone = false;
+    this.description = description;
+    this.dueDate = dueDate;
   }
 
   setTitle(title) {

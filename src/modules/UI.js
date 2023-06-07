@@ -24,7 +24,7 @@ export default class UI {
       const projectsDiv = document.querySelector(".projects-div");
       projectsDiv.innerHTML += `<div class="project-div">
       <div class="project" id="${title}">${title}</div>
-      <div class="delete" id="delete-project">X</div>
+      <button class="delete" id="delete-project"><i class="fa-solid fa-trash"></i></button>
     </div>`;
       UI.addProjectButtonHandler();
       Storage.addProject(new Project(title));
@@ -57,22 +57,33 @@ export default class UI {
     Storage.getTodoList()
       .getProject(title)
       .getItems()
-      .forEach((item) => UI.createItem(title, item.title));
+      .forEach((item) =>
+        UI.createItem(title, item.title, item.description, item.dueDate)
+      );
   }
 
-  static createItem(projectTitle, itemTitle) {
+  static createItem(projectTitle, itemTitle, itemDescription, itemDate) {
     const itemsDiv = document.querySelector(".items-div");
     itemsDiv.innerHTML += `<div class="item-div">
-    <div class="item" id="${itemTitle}">${itemTitle}</div>
-    <div class="delete" id="delete-item">X</div>
+    <div class="task">
+      <div class="item" id="${itemTitle}">${itemTitle}</div>
+      <div class="date" id="${itemDate}">${itemDate}</div>
+    </div>
+    <button class="edit" id="edit-item"><i class="fa-solid fa-pen-to-square"></i></button>
+    <button class="delete" id="delete-item"><i class="fa-solid fa-trash"></i></button>
   </div>`;
     UI.addItemButtonHandler();
-    Storage.addItem(projectTitle, new Item(itemTitle));
+    Storage.addItem(
+      projectTitle,
+      new Item(itemTitle, itemDescription, itemDate)
+    );
   }
 
   static addItemButtonHandler() {
-    const items = document.querySelectorAll(".item");
-    items.forEach((item) => item.addEventListener("click", UI.editItem));
+    const editButtons = document.querySelectorAll(".edit");
+    editButtons.forEach((button) =>
+      button.addEventListener("click", UI.editItem)
+    );
     const deleteButtons = document.querySelectorAll("#delete-item");
     deleteButtons.forEach((button) =>
       button.addEventListener("click", UI.removeItem)
@@ -80,7 +91,9 @@ export default class UI {
   }
 
   static editItem(e) {
-    console.log(e.target.id);
+    const title =
+      e.target.parentNode.parentNode.parentNode.children[0].children[0].id;
+    console.log(title);
   }
 
   // -------renderMain 끝
@@ -125,15 +138,22 @@ export default class UI {
       UI.createProject(title);
       UI.closeModal();
     } else {
-      console.log("NO!");
+      alert("Cannot add a project with a same title!");
     }
   }
 
   static addItem(event) {
     event.preventDefault();
 
-    const inputDiv = document.querySelector("#item-input-title");
-    const itemTitle = inputDiv.value;
+    const inputTitleDiv = document.querySelector("#item-input-title");
+    const itemTitle = inputTitleDiv.value;
+    const inputDescriptionDiv = document.querySelector(
+      "#item-input-description"
+    );
+    const itemDescription = inputDescriptionDiv.value;
+    const inputDateDiv = document.querySelector("#item-input-due-date");
+    const itemDate = inputDateDiv.value;
+
     const projectTitleDiv = document.querySelector("#project-title");
     let projectTitle = projectTitleDiv.textContent;
     if (projectTitle === "Items") {
@@ -143,10 +163,10 @@ export default class UI {
     const items = document.querySelectorAll(".item");
 
     if ([...items].every((value) => value.id !== itemTitle)) {
-      UI.createItem(projectTitle, itemTitle);
+      UI.createItem(projectTitle, itemTitle, itemDescription, itemDate);
       UI.closeModal();
     } else {
-      console.log("NO!");
+      alert("Cannot add an item with a same name!");
     }
   }
 
@@ -164,7 +184,8 @@ export default class UI {
   // --- remove functions
 
   static removeProject(e) {
-    const title = e.target.parentNode.children[0].id;
+    const title = e.target.parentNode.parentNode.parentNode.children[0].id;
+    console.log(typeof e.target.parentNode);
     if (title === "Default") {
       alert("Cannot delete Default project");
       return;
@@ -174,7 +195,8 @@ export default class UI {
   }
 
   static removeItem(e) {
-    const itemTitle = e.target.parentNode.children[0].id;
+    const itemTitle =
+      e.target.parentNode.parentNode.parentNode.children[0].children[0].id;
     const projectTitleDiv = document.querySelector("#project-title");
     const projectTitle = projectTitleDiv.textContent;
     console.log(projectTitle, itemTitle);
