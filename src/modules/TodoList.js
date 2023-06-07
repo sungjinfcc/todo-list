@@ -8,18 +8,27 @@ export default class TodoList {
   }
 
   getProjects() {
+    console.log("getprojects called", this.projects);
     return this.projects;
   }
 
   getProject(title) {
-    return this.projects.find((value) => value.title === title);
+    const project = this.projects.find((value) => value.title === title);
+    console.log("getProject called", project);
+    return project;
   }
 
   addProject(project) {
-    this.projects.push(project);
+    if (this.projects.find((value) => value.title === project.title)) {
+      console.log("cannot add same project");
+    } else {
+      this.projects.push(project);
+    }
   }
 
   removeProject(projectTitle) {
-    this.projects.filter((value) => value.title !== projectTitle);
+    this.projects = this.projects.filter(
+      (value) => value.title !== projectTitle
+    );
   }
 }

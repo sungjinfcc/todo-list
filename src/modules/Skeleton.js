@@ -3,6 +3,7 @@ import "@fortawesome/fontawesome-free/js/solid";
 import "@fortawesome/fontawesome-free/js/regular";
 import "@fortawesome/fontawesome-free/js/brands";
 import UI from "./UI";
+import Storage from "./Storage";
 
 export default class Skeleton {
   constructor() {
@@ -20,7 +21,7 @@ export default class Skeleton {
         </div>
         <div class="content">
           <div class="title-div">
-            <h2 class="title">Default</h2>
+            <h2 class="title", id="project-title">Items</h2>
             <button class="add" id="item-add">+</button>
           </div>
           <div class="items-div">
@@ -46,7 +47,7 @@ export default class Skeleton {
         </div>
         <div class="overlay"></div>
         <footer class="footer">
-          <p>Copyright © 2023 sungjinfcc</p>
+          <p class="reload">Copyright © 2023 sungjinfcc</p>
           <a href="https://github.com/sungjinfcc" target="_blank">
             <i class="fab fa-github"></i>
           </a>
@@ -55,18 +56,10 @@ export default class Skeleton {
 
   createSkeleton() {
     document.body.innerHTML = this.skeleton;
-    Skeleton.addDefault();
     Skeleton.activateDefaultButtons();
-  }
-
-  static addDefault() {
-    const defaultProject = `<div class="project" id="default">Default</div>`;
-    const defaultItem = `<div class="item">First todo</div>`;
-
-    const projectsDiv = document.querySelector(".projects-div");
-    projectsDiv.innerHTML += defaultProject;
-    const itemsDiv = document.querySelector(".items-div");
-    itemsDiv.innerHTML += defaultItem;
+    UI.loadProjects();
+    UI.createProject("Default");
+    UI.loadItems("Default");
   }
 
   static activateDefaultButtons() {
@@ -83,5 +76,24 @@ export default class Skeleton {
     submitProjectButton.addEventListener("click", UI.addProject);
     const submitItemButton = document.querySelector("#item-submit");
     submitItemButton.addEventListener("click", UI.addItem);
+
+    const reset = document.querySelector(".header");
+    reset.addEventListener("click", Skeleton.deleteAll);
+
+    const reload = document.querySelector(".reload");
+    reload.addEventListener("click", Skeleton.reload);
+  }
+
+  static deleteAll() {
+    console.log("Deleted all projects!");
+    const todoList = Storage.getTodoList();
+    todoList.setProjects([]);
+    Storage.saveTodoList(todoList);
+    UI.loadProjects();
+  }
+
+  static reload() {
+    console.log("reloaded");
+    UI.loadProjects();
   }
 }

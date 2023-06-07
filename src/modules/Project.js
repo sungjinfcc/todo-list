@@ -17,15 +17,20 @@ export default class Project {
   }
 
   getItems() {
+    console.log("getItems called", this.items);
     return this.items;
   }
 
-  getItem(title) {
-    return this.items.find((value) => value.title === title);
+  getItem(itemTitle) {
+    return this.items.find((value) => value.title === itemTitle);
   }
 
   addItem(newItem) {
-    this.items.push(newItem);
+    if (this.items.find((value) => value.title === newItem.title)) {
+      console.log("Cannot add same item");
+    } else {
+      this.items.push(newItem);
+    }
   }
 
   removeItem(itemTitle) {

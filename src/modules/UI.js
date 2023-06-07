@@ -1,42 +1,73 @@
-import TodoList from "./TodoList";
+import Project from "./Project";
+import Storage from "./Storage";
+import Item from "./Item";
 
 export default class UI {
-  static renderMain() {
-    UI.loadProjects();
-  }
-
   static loadProjects() {
-    TodoList.getProjects().foreach((project) => {
-      UI.createProject(project.title);
-    });
+    UI.clearBoard();
+    Storage.getTodoList()
+      .getProjects()
+      .forEach((project) => {
+        UI.createProject(project.getTitle());
+      });
   }
 
   static createProject(title) {
-    const projectsDiv = document.querySelector(".projects-div");
-    projectsDiv.innerHTML += `<div class="project" id="${title}">${title}</div>`;
-    UI.addProjectButtonHandler();
+    const projects = document.querySelectorAll(".project");
+    if (
+      title === "Default" &&
+      [...projects].find((value) => value.id === "Default")
+    ) {
+      console.log("default already exists");
+    } else {
+      console.log(`created project named: ${title}`);
+      const projectsDiv = document.querySelector(".projects-div");
+      projectsDiv.innerHTML += `<div class="project-div">
+      <div class="project" id="${title}">${title}</div>
+      <div class="delete" id="delete-project">X</div>
+    </div>`;
+      UI.addProjectButtonHandler();
+      Storage.addProject(new Project(title));
+    }
   }
 
   static addProjectButtonHandler() {
     const projects = document.querySelectorAll(".project");
+    const deleteButtons = document.querySelectorAll("#delete-project");
     projects.forEach((project) =>
       project.addEventListener("click", UI.openProject)
+    );
+    deleteButtons.forEach((button) =>
+      button.addEventListener("click", UI.removeProject)
     );
   }
 
   static openProject(e) {
     const title = e.target.id;
-    console.log(title);
-    // check later
-    TodoList.getProject(title)
-      .getItems()
-      .forEach((item) => this.createItem(item.title));
+    UI.loadItems(title);
   }
 
-  static createItem(title) {
+  static loadItems(title) {
+    const projectTitleDiv = document.querySelector("#project-title");
+    projectTitleDiv.textContent = title;
+    const itemAddDiv = document.querySelector("#item-add");
+    itemAddDiv.textContent = "+";
     const itemsDiv = document.querySelector(".items-div");
-    itemsDiv.innerHTML += `<div class="item" id="${title}>${title}</div>`;
+    itemsDiv.innerHTML = "";
+    Storage.getTodoList()
+      .getProject(title)
+      .getItems()
+      .forEach((item) => UI.createItem(title, item.title));
+  }
+
+  static createItem(projectTitle, itemTitle) {
+    const itemsDiv = document.querySelector(".items-div");
+    itemsDiv.innerHTML += `<div class="item-div">
+    <div class="item" id="${itemTitle}">${itemTitle}</div>
+    <div class="delete" id="delete-item">X</div>
+  </div>`;
     UI.addItemButtonHandler();
+    Storage.addItem(projectTitle, new Item(itemTitle));
   }
 
   static addItemButtonHandler() {
@@ -48,7 +79,7 @@ export default class UI {
     console.log(e.target.id);
   }
 
-  //-------
+  // -------renderMain 끝
 
   static openAddProjectModal() {
     const projectInputModal = document.querySelector("#project-modal");
@@ -72,13 +103,69 @@ export default class UI {
     const modals = document.querySelectorAll(".modal");
     modals.forEach((modal) => modal.classList.remove("active"));
     overlayDiv.classList.remove("active");
+    const inputs = document.querySelectorAll("input");
+    inputs.forEach((input) => {
+      input.value = "";
+    });
   }
 
-  static addProject() {
+  static addProject(event) {
+    event.preventDefault();
+
     const inputDiv = document.querySelector("#project-input");
     const title = inputDiv.value;
-    // --- 여기서 부터 다시 시작
+
+    const projects = document.querySelectorAll(".project");
+
+    if ([...projects].every((value) => value.id !== title)) {
+      UI.createProject(title);
+      UI.closeModal();
+    } else {
+      console.log("NO!");
+    }
   }
 
-  static addItem() {}
+  static addItem(event) {
+    event.preventDefault();
+
+    const inputDiv = document.querySelector("#item-input-title");
+    const itemTitle = inputDiv.value;
+    const projectTitleDiv = document.querySelector("#project-title");
+    let projectTitle = projectTitleDiv.textContent;
+    if (projectTitle === "Items") {
+      projectTitle = "Default";
+    }
+
+    const items = document.querySelectorAll(".item");
+
+    if ([...items].every((value) => value.id !== itemTitle)) {
+      UI.createItem(projectTitle, itemTitle);
+      UI.closeModal();
+    } else {
+      console.log("NO!");
+    }
+  }
+
+  static clearBoard() {
+    const projectTitleDiv = document.querySelector("#project-title");
+    projectTitleDiv.textContent = "";
+    const itemAddDiv = document.querySelector("#item-add");
+    itemAddDiv.textContent = "";
+    const projectsDiv = document.querySelector(".projects-div");
+    projectsDiv.innerHTML = "";
+    const itemsDiv = document.querySelector(".items-div");
+    itemsDiv.innerHTML = "";
+  }
+
+  // --- remove functions
+
+  static removeProject(e) {
+    const title = e.target.parentNode.children[0].id;
+    if (title === "Default") {
+      alert("Cannot delete Default project");
+      return;
+    }
+    Storage.removeProject(title);
+    UI.loadProjects();
+  }
 }
