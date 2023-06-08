@@ -1,9 +1,22 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <title>Todo</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1"><script defer src="runtime.bundle.js"></script><script defer src="index.bundle.js"></script></head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script defer src="runtime.bundle.js"></script>
+    <script defer src="index.bundle.js"></script>
+  </head>
   <body>
+    <div class="modal" id="project-edit-modal">
+      <form id="editProject">
+        <h2>Update project title!</h2>
+        <h4 id="previous-title"></h4>
+        <input type="text" id="project-edit-input" placeholder="New Title" />
+        <button class="submit" id="project-edit-submit" type="submit">
+          Update
+        </button>
+      </form>
+    </div>
   </body>
 </html>

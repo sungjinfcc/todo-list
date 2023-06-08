@@ -39,6 +39,7 @@ main {
 }
 .delete {
   border: none;
+  background-color: transparent;
   font-size: 1.2rem;
   color: red;
   width: 1.5rem;
@@ -118,6 +119,9 @@ form {
 form h2,
 form input {
   margin-bottom: 1rem;
+}
+form h4 {
+  height: 0;
 }
 form input {
   border: none;

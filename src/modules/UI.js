@@ -5,6 +5,7 @@ import Item from "./Item";
 export default class UI {
   static loadProjects() {
     UI.clearBoard();
+    UI.closeModal();
     Storage.getTodoList()
       .getProjects()
       .forEach((project) => {
@@ -24,6 +25,7 @@ export default class UI {
       const projectsDiv = document.querySelector(".projects-div");
       projectsDiv.innerHTML += `<div class="project-div">
       <div class="project" id="${title}">${title}</div>
+      <button class="edit" id="edit-project"><i class="fa-solid fa-pen-to-square"></i></button>
       <button class="delete" id="delete-project"><i class="fa-solid fa-trash"></i></button>
     </div>`;
       UI.addProjectButtonHandler();
@@ -34,11 +36,15 @@ export default class UI {
   static addProjectButtonHandler() {
     const projects = document.querySelectorAll(".project");
     const deleteButtons = document.querySelectorAll("#delete-project");
+    const editButtons = document.querySelectorAll(".edit");
     projects.forEach((project) =>
       project.addEventListener("click", UI.openProject)
     );
     deleteButtons.forEach((button) =>
       button.addEventListener("click", UI.removeProject)
+    );
+    editButtons.forEach((button) =>
+      button.addEventListener("click", UI.openEditProjectModal)
     );
   }
 
@@ -80,20 +86,23 @@ export default class UI {
   }
 
   static addItemButtonHandler() {
-    const editButtons = document.querySelectorAll(".edit");
-    editButtons.forEach((button) =>
-      button.addEventListener("click", UI.editItem)
-    );
     const deleteButtons = document.querySelectorAll("#delete-item");
     deleteButtons.forEach((button) =>
       button.addEventListener("click", UI.removeItem)
     );
   }
 
-  static editItem(e) {
-    const title =
-      e.target.parentNode.parentNode.parentNode.children[0].children[0].id;
-    console.log(title);
+  static updateProject(e) {
+    e.preventDefault();
+    const prevTitle = e.target.parentNode.children[1].textContent;
+    const projectEditInput = document.querySelector("#project-edit-input");
+    if (projectEditInput.value !== "") {
+      const newTitle = projectEditInput.value;
+      const todoList = Storage.getTodoList();
+      todoList.getProject(prevTitle).setTitle(newTitle);
+      Storage.saveTodoList(todoList);
+      UI.loadProjects();
+    }
   }
 
   // -------renderMain 끝
@@ -108,6 +117,30 @@ export default class UI {
     const itemInputModal = document.querySelector("#item-modal");
     itemInputModal.classList.add("active");
     UI.showOverlay();
+  }
+
+  static openEditProjectModal(e) {
+    let title = "";
+    if (e.target.parentNode.role === "img") {
+      title = e.target.parentNode.parentNode.parentNode.children[0].id;
+    } else if (e.target.parentNode.className === "edit") {
+      title = e.target.parentNode.parentNode.children[0].id;
+    } else if (e.target.parentNode.className === "project-div") {
+      title = e.target.parentNode.children[0].id;
+    }
+    if (title === "Default") {
+      alert("Cannot update Default project!");
+      return;
+    }
+    const projectEditModal = document.querySelector("#project-edit-modal");
+    projectEditModal.classList.add("active");
+    UI.showOverlay();
+
+    const projectEditInput = document.querySelector("#project-edit-input");
+    const previousTitleDiv = document.querySelector("#previous-title");
+
+    projectEditInput.value = title;
+    previousTitleDiv.textContent = title;
   }
 
   static showOverlay() {
@@ -184,26 +217,28 @@ export default class UI {
   // --- remove functions
 
   static removeProject(e) {
-    const title = e.target.parentNode.parentNode.parentNode.children[0].id;
-    console.log(typeof e.target.parentNode);
-    if (title === "Default") {
-      alert("Cannot delete Default project");
-      return;
+    if (e.target.parentNode.parentNode.className === "delete") {
+      const title = e.target.parentNode.parentNode.parentNode.children[0].id;
+      if (title === "Default") {
+        alert("Cannot delete Default project");
+        return;
+      }
+      Storage.removeProject(title);
+      UI.loadProjects();
     }
-    Storage.removeProject(title);
-    UI.loadProjects();
   }
 
   static removeItem(e) {
-    const itemTitle =
-      e.target.parentNode.parentNode.parentNode.children[0].children[0].id;
-    const projectTitleDiv = document.querySelector("#project-title");
-    const projectTitle = projectTitleDiv.textContent;
-    console.log(projectTitle, itemTitle);
-    const todoList = Storage.getTodoList();
-    todoList.getProject(projectTitle).removeItem(itemTitle);
-    Storage.saveTodoList(todoList);
-    UI.loadProjects();
-    UI.loadItems(projectTitle);
+    if (e.target.parentNode.parentNode.className === "delete") {
+      const itemTitle =
+        e.target.parentNode.parentNode.parentNode.children[0].children[0].id;
+      const projectTitleDiv = document.querySelector("#project-title");
+      const projectTitle = projectTitleDiv.textContent;
+      const todoList = Storage.getTodoList();
+      todoList.getProject(projectTitle).removeItem(itemTitle);
+      Storage.saveTodoList(todoList);
+      UI.loadProjects();
+      UI.loadItems(projectTitle);
+    }
   }
 }

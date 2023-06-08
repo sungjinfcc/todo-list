@@ -30,11 +30,21 @@ export default class Skeleton {
         </main>
         <div class="modal" id="project-modal">
           <form id="addProject">
-            <h2>Add new project!</h3>
+            <h2>Add new project!</h2>
             <input type="text" id="project-input" placeholder="Title" />
             <button class="submit" id="project-submit" type="submit">Submit</button>
           </form>
         </div>
+        <div class="modal" id="project-edit-modal">
+      <form id="editProject">
+        <h2>Update project title!</h2>
+        <h4 id="previous-title"></h4>
+        <input type="text" id="project-edit-input" placeholder="New Title" />
+        <button class="update" id="project-update" type="submit">
+          Update
+        </button>
+      </form>
+    </div>
         <div class="modal" id="item-modal">
           <form id="addItem">
             <h2>Add new item!</h2>
@@ -75,6 +85,8 @@ export default class Skeleton {
     submitProjectButton.addEventListener("click", UI.addProject);
     const submitItemButton = document.querySelector("#item-submit");
     submitItemButton.addEventListener("click", UI.addItem);
+    const updateProjectButton = document.querySelector("#project-update");
+    updateProjectButton.addEventListener("click", UI.updateProject);
 
     const reset = document.querySelector(".header");
     reset.addEventListener("click", Skeleton.deleteAll);
