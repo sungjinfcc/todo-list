@@ -19,9 +19,7 @@ export default class UI {
       title === "Default" &&
       [...projects].find((value) => value.id === "Default")
     ) {
-      console.log("default already exists");
     } else {
-      console.log(`created project named: ${title}`);
       const projectsDiv = document.querySelector(".projects-div");
       projectsDiv.innerHTML += `<div class="project-div">
       <div class="project" id="${title}">${title}</div>
@@ -75,7 +73,6 @@ export default class UI {
       <div class="item" id="${itemTitle}">${itemTitle}</div>
       <div class="date" id="${itemDate}">${itemDate}</div>
     </div>
-    <button class="edit" id="edit-item"><i class="fa-solid fa-pen-to-square"></i></button>
     <button class="delete" id="delete-item"><i class="fa-solid fa-trash"></i></button>
   </div>`;
     UI.addItemButtonHandler();

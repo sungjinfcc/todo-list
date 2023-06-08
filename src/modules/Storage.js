@@ -8,7 +8,6 @@ export default class Storage {
   }
 
   static getTodoList() {
-    console.log("getTodoList called");
     const todoList = Object.assign(
       new TodoList(),
       JSON.parse(localStorage.getItem("todoList"))
@@ -25,7 +24,6 @@ export default class Storage {
           project.getItems().map((item) => Object.assign(new Item(), item))
         )
       );
-    console.log(`todoList result: ${todoList.getProjects()}`);
     return todoList;
   }
 

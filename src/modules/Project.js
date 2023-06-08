@@ -17,7 +17,6 @@ export default class Project {
   }
 
   getItems() {
-    console.log("getItems called", this.items);
     return this.items;
   }
 
@@ -27,7 +26,6 @@ export default class Project {
 
   addItem(newItem) {
     if (this.items.find((value) => value.title === newItem.title)) {
-      console.log("Cannot add same item");
     } else {
       this.items.push(newItem);
     }

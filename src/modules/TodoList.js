@@ -18,7 +18,6 @@ export default class TodoList {
 
   addProject(project) {
     if (this.projects.find((value) => value.title === project.title)) {
-      console.log("cannot add same project");
     } else {
       this.projects.push(project);
     }
